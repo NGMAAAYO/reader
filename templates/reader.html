@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html class="loaded">
+  <head>
+      <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>自定义阅读器</title>
+      <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+      <meta name="renderer" content="webkit">
+      <link rel="stylesheet" data-ignore="true" href="./statics/qdstyle.css">
+      <style name="lbf-overlay">.lbf-overlay { position:fixed; top:0; left:0;}</style>
+      <script language="javascript" type="text/javascript">
+        function _get(name) {
+          var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+          var reg_rewrite = new RegExp("(^|/)" + name + "/([^/]*)(/|$)", "i");
+          var r = window.location.search.substr(1).match(reg);
+          var q = window.location.pathname.substr(1).match(reg_rewrite);
+          if(r != null){
+              return unescape(r[2]);
+          }else if(q != null){
+              return unescape(q[2]);
+          }else{
+              return null;
+          }
+        }
+        var preview_page = "{{pre}}";
+        var next_page = "{{next}}";
+        var url = _get("target_url");
+        var fsize, rtheme;
+        function pre(){
+          var u = "/reader?target_url="+escape(preview_page)+"&target_head="+_get("target_head")+"&target_tail="+_get("target_tail")+"&pre_name="+_get("pre_name")+"&next_name="+_get("next_name");
+          if (fsize != 18) u += "&fsize=" + fsize;
+          if (rtheme != 0) u += "&theme=" + rtheme;
+          document.location.href = u;
+        }
+        function next(){
+          var u = "/reader?target_url="+escape(next_page)+"&target_head="+_get("target_head")+"&target_tail="+_get("target_tail")+"&pre_name="+_get("pre_name")+"&next_name="+_get("next_name");
+          if (fsize != 18) u += "&fsize=" + fsize;
+          if (rtheme != 0) u += "&theme=" + rtheme;
+          document.location.href = u;
+        }
+        function jumpPage() {
+          var event = document.all ? window.event : arguments[0];
+          if (event.keyCode == 37) pre();
+          if (event.keyCode == 39) next();
+        }
+        document.onkeydown=jumpPage;
+      </script>
+  </head>
+  <body id="bd" class="theme-0" style="zoom: 1;" oncontextmenu="return false"  onselectstart="return false"  ondragstart="return false">
+      <div class="wrap">
+          <div class="read-main-wrap font-family01" id="scont" style="font-size: 18px; z-index: 101;">
+              <div class="text-wrap">
+                  <div class="main-text-wrap ">
+                      <div class="text-head">
+                          <h3 class="j_chapterName">
+                              <span class="content-wrap">{{title}}</span>
+                          </h3>
+                          <div class="text-info cf">
+                              <div class="info fl">
+                                  <a onclick="size(fsize-1);">小</a>
+                                  &nbsp;&nbsp;字体大小：
+                                  <span id="fs">18</span>
+                                  px&nbsp;&nbsp;
+                                  <a onclick="size(fsize+1);">大</a>
+                                  &nbsp;&nbsp;&nbsp;&nbsp;
+                                  &nbsp;&nbsp;主题<span id="th">0</span>&nbsp;&nbsp;
+                                  <a onclick="ctheme(rtheme+1);">更换主题</a>
+                              </div>
+                          </div>
+                      </div>
+                      <div id="cont" class="read-content j_readContent">  
+                          {{text}}
+                      </div>
+                  </div>
+              </div>
+              <div class="chapter-control dib-wrap">
+                  <a onclick="pre();">上一章</a><span>|</span>
+                  <a href="/">首页</a><span>|</span>
+                  <a onclick="next();">下一章</a>
+              </div>
+          </div>
+      </div>
+      <script>
+          function size(s) {
+            fsize = s;
+            document.all.fs.innerHTML = s;
+            document.all.scont.style="font-size:" + s + "px; z-index: 101;";
+          }
+          function ctheme(th) {
+            if (th >= 7) th = 0;
+            rtheme = th;
+            document.all.th.innerHTML = th;
+          document.getElementById("bd").className = "theme-" + th;
+          }
+          if (_get("fsize") != null) {
+            size(parseInt(_get("fsize")));
+          } else {
+            fsize = 18;
+          }
+          if (_get("theme") != null) {
+            ctheme(parseInt(_get("theme")));
+          } else {
+            rtheme = 0;
+          }
+      </script>
+  </body>
+</html>
