@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="position: fixed; width: 100%; overflow: hidden; ">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> 
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=1200">
+  <title>自定义阅读器</title>
+  <link href="http://code.aidlearning.net/auto/semantic.min.css" rel="stylesheet">
+  <script language="javascript" type="text/javascript">
+    function _get(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+      var reg_rewrite = new RegExp("(^|/)" + name + "/([^/]*)(/|$)", "i");
+      var r = window.location.search.substr(1).match(reg);
+      var q = window.location.pathname.substr(1).match(reg_rewrite);
+      if(r != null){
+          return unescape(r[2]);
+      }else if(q != null){
+          return unescape(q[2]);
+      }else{
+          return null;
+      }
+    }
+    function size(s) {
+      fsize = s;
+      document.all.fs.innerHTML = s;
+      document.all.cont.style="font-size:" + s + "px;";
+    }
+    var preview_page = "{{ pre }}";
+    var next_page = "{{ next }}";
+    var url = _get("target_url");
+    var fsize;
+    if (_get("fsize") != null) {
+      fsize = parseInt(_get("fsize"));
+      size(fsize);
+    } else {
+      fsize = 18;
+    }
+    function pre(){
+      var u = "/reader?target_url="+escape(preview_page)+"&target_head="+_get("target_head")+"&target_tail="+_get("target_tail")+"&pre_name="+_get("pre_name")+"&next_name="+_get("next_name");
+      if (fsize != 18) u += "&fsize=" + fsize;
+      document.location = u;
+    }
+    function next(){
+      var u = "/reader?target_url="+escape(next_page)+"&target_head="+_get("target_head")+"&target_tail="+_get("target_tail")+"&pre_name="+_get("pre_name")+"&next_name="+_get("next_name");
+      if (fsize != 18) u += "&fsize=" + fsize;
+      document.location = u;
+    }
+    function jumpPage() {
+      var event = document.all ? window.event : arguments[0];
+      if (event.keyCode == 37) pre();
+      if (event.keyCode == 39) next();
+    }
+    document.onkeydown=jumpPage;
+  </script>
+</head>
+<body style="position: relative; overflow-y: overlay; " data-gr-c-s-loaded="true">
+  <div style="margin-top: 28px; ">
+    <div class="ui main container">
+      <div>
+        <div class="ui existing segment">
+      	  <div id="content" class="font-content">
+            <div style="position: relative; overflow: hidden; ">
+              <div>
+                <span onclick="size(fsize-1);">小</span>&nbsp;&nbsp;字体大小：<span id="fs">18</span>px&nbsp;&nbsp;<span onclick="size(fsize+1);">大</span>
+              </div>
+              <div id="cont" style="font-size:18px;">
+                {{ text|safe }}
+              </div>
+              <div>
+                <a href="" onclick="pre();">上一章</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="" onclick="next();">下一章</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
