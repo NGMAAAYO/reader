@@ -18,15 +18,13 @@ def statics(file_name):
     return FileResponse("./statics/{}".format(file_name))
 
 def get_content(url, driver):
-    # driver.goto(url)
-    # content = driver.content()
-    # return content
-    with sync_playwright() as p:
-        brower = p.chromium.launch()
-        page = brower.new_page()
-        page.goto(url)
-        res = page.content()
-        brower.close()
+    playwright = sync_playwright().start()
+    brower = playwright.chromium.launch()
+    page = brower.new_page()
+    page.goto(url)
+    res = page.content()
+    brower.close()
+    playwright.stop()
     return res
 
 def filter(string):
@@ -41,9 +39,7 @@ def filter(string):
     return s
 
 def preprocess(params, driver):
-    print(params)
     page_source = get_content(params['target_url'], driver)  # page_source must be string represent the web page's source and in UTF-8 encoding
-    print(page_source)
     resp = {}
     url_head = params['target_url'].replace("https://", "").replace("http://", "").split("/")[0]
     url_head = ("https://" if "https://" in params['target_url'] else "http://") + url_head

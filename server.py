@@ -28,26 +28,9 @@ def get_statics(file):
     return statics(file)
 
 if __name__ == "__main__":
-    with sync_playwright() as p:
-        brower = p.chromium.launch()
-        page = brower.new_page()
-        page.goto("https://www.biquge.net/197/197503/6912606.html")
-        res = page.content()
-        brower.close()
-    print(res)
-    # playwright = sync_playwright().start()
-    # browser = playwright.chromium.launch()
-    # global page
-    # page = browser.new_page()
-    uvicorn.run(app, port=16101)
-    quit()
     try:
         uvicorn.run(app, port=16101)
     except KeyboardInterrupt:
-        browser.close()
-        playwright.stop()
         print("Server closed.")
     except Exception as e:
         print(e)
-        browser.close()
-        playwright.stop()
